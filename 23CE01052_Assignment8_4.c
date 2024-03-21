@@ -1,21 +1,66 @@
 #include <stdio.h>
-void MoreThanOnce(int n,int arr1[n+1])
-{
-    int x = 0;
-    for(int i = 0; i<n+1; i++)
-    x = x^*(arr1+i);
-    for(int i = 1; i<n+1; i++)
-    x = x^i;
-    printf("%d", x);
-}
-void main()
-{
-    int n;
-    scanf("%d", &n);
-    int arr1[n];
-    for(int i = 0; i<(n+1); i++)
-    {
-        scanf("%d", (arr1+i));
+#include <stdlib.h>
+
+int moreThanOnce(int *arr, int n) {
+    int ref = -1;
+    for(int i = 1; i <= n; i++){
+        int check = 0;
+        for(int j = 0; j < n + 1; j++){
+
+            if(arr[j] == i){
+                check++;
+            }
+        }
+
+        if(check == 0){
+            printf("All the numbers between [1, n] does not exist int he array!\n");
+            return -1;
+        }
+        else if(check == 1){
+            check = 0;
+            continue;
+        }
+        else if(check == 2){
+            ref = i;
+        }
+        else{
+            printf("All the numbers between [1, n] does not exist int he array!\n");
+            return -1;
+        }
+        check = 0;
     }
-    MoreThanOnce(n,arr1);
+
+    if(ref == -1){
+        printf("None of the elements repeats in the array.");
+    }
+
+    return ref;
+}
+
+int main() {
+    int n;
+
+    printf("Enter the size of the array: ");
+    scanf("%d", &n);
+
+    int *arr = (int *)malloc((n+1) * sizeof(int));
+
+    printf("Enter %d elements of the array:\n", n);
+    for (int i = 0; i < n+1; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    printf("Array: ");
+    for (int i = 0; i < n+1; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    int var = moreThanOnce(arr, n);
+
+    if(var != -1){
+        printf("Repeated element is: %d\n",var);
+    }
+
+    return 0;
 }
