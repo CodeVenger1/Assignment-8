@@ -1,58 +1,89 @@
 #include <stdio.h>
-void MatrixMultiplication(int m, int n, int a, int b, int arr1[m][n], int arr2[a][b] )
-{
-    if(n!=a)
-    printf("Can't be multiplied");
-    else
-    {
-    int arr3[m][b];
-    for(int i = 0; i<m; i++)
-    {
-        for(int j = 0; j<b; j++)
-        *(*(arr3+i) + j) = 0;
-        //arr3[i][j] = 0;
+#include <stdlib.h>
+
+void matrixMultiplication(int **mat1, int **mat2, int **result, int rows1, int cols1, int rows2, int cols2) {
+    if (cols1 != rows2) {
+        printf("Matrix multiplication not possible!\n");
+        return;
     }
-    for(int i = 0; i<m; i++)
-    {
-        for(int j = 0; j<b; j++)
-        {
-            for( int k = 0; k<n; k++)
-            {
-               *(*(arr3+i) + j) = *(*(arr3+i) + j) + (*(*(arr1+i) + k))*(*(*(arr2+k) + j));
-               //arr3[i][j] = arr3[i][j] + arr1[i][k] * arr2[k][j];
+
+    for (int i = 0; i < rows1; i++) {
+        for (int j = 0; j < cols2; j++) {
+            result[i][j] = 0;
+            for (int k = 0; k < cols1; k++) {
+                result[i][j] += mat1[i][k] * mat2[k][j];
             }
-            
         }
     }
-    //printf("%p %d %p %d", *arr1, *arr1, *(arr1+1), *(arr1+1));
-    for(int i = 0; i<m; i++)
-    {
-        for(int j = 0; j<b; j++)
-        printf("%d ", *(*(arr3+i) + j));
+}
+
+int main() {
+    int rows1, cols1, rows2, cols2;
+
+    printf("Enter the dimensions of the first matrix (rows columns): ");
+    scanf("%d %d", &rows1, &cols1);
+
+    int **mat1 = (int **)malloc(rows1 * sizeof(int *));
+    for (int i = 0; i < rows1; i++) {
+        mat1[i] = (int *)malloc(cols1 * sizeof(int));
+    }
+
+    printf("Enter the elements of the first matrix:\n");
+    for (int i = 0; i < rows1; i++) {
+        for (int j = 0; j < cols1; j++) {
+            scanf("%d", &mat1[i][j]);
+        }
+    }
+
+    printf("Enter the dimensions of the second matrix (rows columns): ");
+    scanf("%d %d", &rows2, &cols2);
+
+    int **mat2 = (int **)malloc(rows2 * sizeof(int *));
+    for (int i = 0; i < rows2; i++) {
+        mat2[i] = (int *)malloc(cols2 * sizeof(int));
+    }
+
+    printf("Enter the elements of the second matrix:\n");
+    for (int i = 0; i < rows2; i++) {
+        for (int j = 0; j < cols2; j++) {
+            scanf("%d", &mat2[i][j]);
+        }
+    }
+
+    if (cols1 != rows2) {
+        printf("Matrix multiplication not possible!\n");
+        return 1;
+    }
+
+    int **result = (int **)malloc(rows1 * sizeof(int *));
+    for (int i = 0; i < rows1; i++) {
+        result[i] = (int *)malloc(cols2 * sizeof(int));
+    }
+
+    matrixMultiplication(mat1, mat2, result, rows1, cols1, rows2, cols2);
+
+    printf("Resultant matrix after multiplication:\n");
+    for (int i = 0; i < rows1; i++) {
+        for (int j = 0; j < cols2; j++) {
+            printf("%d ", result[i][j]);
+        }
         printf("\n");
     }
+
+    for (int i = 0; i < rows1; i++) {
+        free(mat1[i]);
     }
-}
-void main()
-{
-    int m,n;
-    printf("Enter the dimensions of the first array");
-    scanf("%d %d", &m, &n);
-    int a,b;
-    printf("Enter the dimensions of the second array");
-    scanf("%d %d", &a, &b);
-    int arr1[m][n];
-    int arr2[a][b];
-    for(int i = 0; i<m; i++)
-    {
-        for(int j = 0; j<n; j++)
-        scanf("%d", (*(arr1+i) + j));
+    free(mat1);
+
+    for (int i = 0; i < rows2; i++) {
+        free(mat2[i]);
     }
-    for(int i = 0; i<a; i++)
-    {
-        for(int j = 0; j<b; j++)
-        scanf("%d", (*(arr2+i) + j));
+    free(mat2);
+
+    for (int i = 0; i < rows1; i++) {
+        free(result[i]);
     }
-    //printf("%d", **arr1);
-    MatrixMultiplication(m, n, a, b,arr1, arr2);
+    free(result);
+
+    return 0;
 }
